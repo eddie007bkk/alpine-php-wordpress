@@ -1,4 +1,4 @@
-FROM alpine:3.5
+FROM alpine:3.10
 MAINTAINER Etopian Inc. <contact@etopian.com>
 
 LABEL   devoply.type="site" \
@@ -13,8 +13,8 @@ LABEL   devoply.type="site" \
 
 
 
-RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.5/main' >> /etc/apk/repositories\
-    && echo 'http://dl-cdn.alpinelinux.org/alpine/v3.5/community' >> /etc/apk/repositories\
+RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.10/main' >> /etc/apk/repositories\
+    && echo 'http://dl-cdn.alpinelinux.org/alpine/v3.10/community' >> /etc/apk/repositories\
     && apk update \
     && apk add --no-cache \
     bash \
@@ -44,6 +44,12 @@ RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.5/main' >> /etc/apk/repositori
     php7-mbstring \
     php7-dom \
     php7-xmlreader \
+    php7-tokenizer \
+    php7-soap \
+    php7-simplexml \
+    php7-xmlwriter \
+    php7-xsl \
+    php7-zip \
     mysql-client \
     openssh-client \
     git \
@@ -72,6 +78,10 @@ ADD files/php-fpm.conf /etc/php7/
 ADD files/run.sh /
 ADD files/wp-config-devoply.php /usr/bin/wp-config-devoply
 RUN chmod +x /run.sh && chmod +x /usr/bin/wp-config-devoply
+
+RUN php7 -r "copy('http://getcomposer.org/installer', 'composer-setup.php');" && \
+php7 composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
+php7 -r "unlink('composer-setup.php');" 
 
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x wp-cli.phar && mv wp-cli.phar /usr/bin/wp-cli && chown nginx:nginx /usr/bin/wp-cli
 
