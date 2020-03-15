@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -t etopian/alpine-php-wordpress:3.5 .
+docker build -t etopian/alpine-php-wordpress:3.8 .
